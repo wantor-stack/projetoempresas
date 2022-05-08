@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
  
 @Component({
   selector: 'app-user-register',
@@ -16,7 +17,8 @@ export class UserRegisterComponent implements OnInit {
  
   //construtor da classe
   constructor(
-    private httpClient: HttpClient //injeção de dependência
+    private httpClient: HttpClient, //injeção de dependência
+    private spinnerService: NgxSpinnerService //injeção de dependência
   ) {
  
   }
@@ -60,6 +62,9 @@ export class UserRegisterComponent implements OnInit {
   //função para realizar o cadastro do usuário
   onSubmit(): void {
  
+    //exibindo o carregamento
+    this.spinnerService.show();
+ 
     this.limparMensagens();
  
     //requisição para a API..
@@ -69,13 +74,15 @@ export class UserRegisterComponent implements OnInit {
     )
       .subscribe( //RESPOSTA (PROMISSE)
         (data: any) => { //SUCESSO
+          this.spinnerService.hide();
           //mensagem obtida da API..
           this.mensagem_sucesso = data.message;
           //limpar os campos do formulário
-          this.formRegister.reset();
+          this.formRegister.reset();          
         },
         e => { //ERRO
-          switch(e.status){
+          this.spinnerService.hide();
+          switch (e.status) {
             case 422:
               this.mensagem_erro = e.error.message;
               break;
@@ -83,14 +90,13 @@ export class UserRegisterComponent implements OnInit {
             default:
               this.mensagem_erro = "Ocorreu um erro no servidor. Por favor tente novamente.";
               break;
-           
-          }
+          }          
         }
       )
   }
  
   //função para limpar as mensagens
-  limparMensagens() : void {
+  limparMensagens(): void {
     this.mensagem_sucesso = '';
     this.mensagem_erro = '';
   }

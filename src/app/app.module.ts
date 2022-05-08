@@ -5,22 +5,42 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app.routing';
  
 import { AppComponent } from './app.component';
-import { UserLoginComponent } from './user-login/user-login.component';
-import { UserRegisterComponent } from './user-register/user-register.component';
- 
+import { UserLoginComponent } from './components/users/user-login/user-login.component';
+import { UserRegisterComponent } from './components/users/user-register/user-register.component';
+
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgxSpinnerModule } from "ngx-spinner";
+import { UserPasswordComponent } from './components/users/user-password/user-password.component';
+import { EmpresasCadastroComponent } from './components/empresas/empresas-cadastro/empresas-cadastro.component';
+import { EmpresasConsultaComponent } from './components/empresas/empresas-consulta/empresas-consulta.component';
+import { EmpresasEdicaoComponent } from './components/empresas/empresas-edicao/empresas-edicao.component';
+import { FuncionariosCadastroComponent } from './components/funcionarios/funcionarios-cadastro/funcionarios-cadastro.component';
+import { FuncionariosConsultaComponent } from './components/funcionarios/funcionarios-consulta/funcionarios-consulta.component';
+import { FuncionariosEdicaoComponent } from './components/funcionarios/funcionarios-edicao/funcionarios-edicao.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     UserLoginComponent,
-    UserRegisterComponent
+    UserRegisterComponent,
+    UserPasswordComponent,
+    EmpresasCadastroComponent,
+    EmpresasConsultaComponent,
+    EmpresasEdicaoComponent,
+    FuncionariosCadastroComponent,
+    FuncionariosConsultaComponent,
+    FuncionariosEdicaoComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
   ],
+  
   providers: [],
   bootstrap: [AppComponent]
 })
