@@ -1,1 +1,70 @@
-<p>empresas-consulta works!</p>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+ 
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Consulta de Empresas</h5>
+                <p class="card-text">Listagem de empresas cadastradas.</p>
+                <hr />
+ 
+                <div *ngIf="mensagem" class="mb-3">
+                    <strong>{{mensagem}}</strong>
+                </div>
+ 
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]="filtro.nomeFantasia"
+                            placeholder="Filtrar empresas pelo Nome Fantasia" />
+                    </div>
+                    <div class="col-md-8 text-end">
+                        <pagination-controls
+                            (pageChange)="handlePageChange($event)"
+                            previousLabel="Página anterior"
+                            nextLabel="Próxima página">
+                        </pagination-controls>
+                    </div>
+                </div>
+ 
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nome Fantasia</th>
+                            <th>Razão Social</th>
+                            <th>CNPJ</th>
+                            <th>Operações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let e of empresas | filterBy: filtro | paginate : { itemsPerPage: 5, currentPage: pagina }">
+                            <td>{{e.nomeFantasia}}</td>
+                            <td>{{e.razaoSocial}}</td>
+                            <td>{{e.cnpj | mask: '00.000.000/0000-00'}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"
+                                    [routerLink]="['/empresas-edicao', e.idEmpresa]">
+                                    Editar
+                                </button>
+                                &nbsp;
+                                <button class="btn btn-sm btn-danger"
+                                    (click)="onDelete(e.idEmpresa)">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4">
+                                Quantidade de empresas: {{(empresas | filterBy: filtro).length}}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

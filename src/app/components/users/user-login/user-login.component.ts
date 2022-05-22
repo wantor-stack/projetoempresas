@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthenticationHelper } from 'src/app/helpers/authentication.helper';
  
 @Component({
   selector: 'app-user-login',
@@ -17,10 +18,16 @@ export class UserLoginComponent implements OnInit {
   //inicialização por injeção de dependência
   constructor(
     private httpClient: HttpClient,
-    private spinnerService: NgxSpinnerService
-  ) { }
+    private spinnerService: NgxSpinnerService,
+    private authenticationHelper: AuthenticationHelper
+  ) { 
+    if (this.authenticationHelper.getAuthData()) {
+      window.location.href = '/empresas-consulta';
+    }
+  }
  
   ngOnInit(): void {
+ 
   }
  
   formLogin = new FormGroup({
@@ -40,28 +47,29 @@ export class UserLoginComponent implements OnInit {
  
     this.httpClient.post(environment.apiUrl + "/login", this.formLogin.value)
       .subscribe(
-        (data: any) => {
-          this.spinnerService.hide();
+        {
+          next: (data: any) => {
+           
+            this.formLogin.reset();
  
-          this.mensagem_sucesso = data.message;
-          this.formLogin.reset();
+            this.authenticationHelper.signIn(data);
  
-          //salvando na localstorage
-          localStorage.setItem('AUTH_USER', JSON.stringify(data));
-        },
-        e => {
-          this.spinnerService.hide();
-         
-          switch (e.status) {
-            case 401:
-              this.mensagem_erro = e.error.message;
-              break;
+            window.location.href = '/empresas-consulta';
+          },
+          error: e => {
+            this.spinnerService.hide();
  
-            default:
-              this.mensagem_erro = "Ocorreu um erro ao autenticar o usuário, tente novamente.";
-              break;
+            switch (e.status) {
+              case 401:
+                this.mensagem_erro = e.error.message;
+                break;
+ 
+              default:
+                this.mensagem_erro = "Ocorreu um erro ao autenticar o usuário, tente novamente.";
+                break;
+            }
+ 
           }
- 
         }
       );
   }
@@ -72,6 +80,5 @@ export class UserLoginComponent implements OnInit {
   }
  
 }
- 
 
 

@@ -1,1 +1,78 @@
-<p>funcionarios-consulta works!</p>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+ 
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Consulta de Funcionários</h5>
+                <p class="card-text">Listagem de funcionários cadastrados.</p>
+                <hr />
+ 
+                <div *ngIf="mensagem" class="mb-3">
+                    <strong>{{mensagem}}</strong>
+                </div>
+ 
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]="filtro.nome"
+                            placeholder="Filtrar funcionários pelo nome" />
+                    </div>
+                    <div class="col-md-8 text-end">
+                        <pagination-controls
+                            (pageChange)="handlePageChange($event)"
+                            previousLabel="Página anterior"
+                            nextLabel="Próxima página">
+                        </pagination-controls>
+                    </div>
+                </div>
+ 
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nome do Funcionário</th>
+                            <th>Matrícula</th>
+                            <th>CPF</th>
+                            <th>Data de Admissão</th>
+                            <th>Empresa</th>
+                            <th>Operações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let f of funcionarios | filterBy: filtro | paginate : { itemsPerPage: 5, currentPage: pagina }">
+                            <td>{{f.nome}}</td>
+                            <td>{{f.matricula}}</td>
+                            <td>{{f.cpf | mask: '000.000.000-00'}}</td>
+                            <td>{{f.dataAdmissao | date : 'dd/MM/yyyy'}}</td>
+                            <td>
+                                {{f.empresa.nomeFantasia}} <br/>
+                                <small>{{f.empresa.razaoSocial}}</small> <br/>
+                                <small>{{f.empresa.cnpj}}</small>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"
+                                    [routerLink]="['/funcionarios-edicao', f.idFuncionario]">
+                                    Editar
+                                </button>
+                                &nbsp;
+                                <button class="btn btn-sm btn-danger"
+                                    (click)="onDelete(f.idFuncionario)">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4">
+                                Quantidade de funcionários: {{(funcionarios | filterBy: filtro).length}}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
